@@ -1,0 +1,11 @@
+{
+	"files.associations": {
+		"readline.h": "c",
+		"minishell.h": "c",
+		"sstream": "c",
+		"locale": "c"
+	},
+	"editor.detectIndentation": false,
+	"editor.insertSpaces": false,
+	"workbench.panel.defaultLocation": "right"
+}
