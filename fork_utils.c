@@ -84,7 +84,23 @@ void	single_child(t_cmd *cmd)
 	if (!path && !has_an_error(cmd, 0))
 		status = not_found(cmd[0].exec.exec);
 	if (path && !has_an_error(cmd, 0))
-		execve(path, cmd[0].exec.argv, cmd->new_env);
+	{
+		char **env = malloc(sizeof (*env) * (ptr_arr_len(cmd->new_env) + 1));
+
+		int final_index = 0;
+
+		for (size_t i = 0; cmd->new_env[i]; ++i)
+		{
+			if (ft_strchr(cmd->new_env[i], '='))
+				env[final_index++] = ft_strdup(cmd->new_env[i]);
+		}
+
+		env[final_index] = 0;
+
+		execve(path, cmd[0].exec.argv, env);
+
+		free_ptr_arr(env);
+	}
 	if (path && !dir(path) && !has_an_error(cmd, 0) && cmd[0].exec.exec[0])
 		status = perror_builtins(CE, "minishell: ", cmd[0].exec.exec, ": ");
 	if (cmd[0].exec.exec[0] && dir(path))

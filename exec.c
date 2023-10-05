@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int		exec_len(char *s, int i, int cond);
+int		exec_len(char *s, int i, int cond, int len);
 int		argv_len(char *cmd, int i);
 int		argv_count(char *cmd, int i, int count);
 char	*argv_dup(char *cmd, int i, t_cmd *cmd1, int j);
@@ -68,7 +68,7 @@ int	init_exec(t_exec *exec, char *cmd)
 
 	j = 0;
 	i = ft_isspace_index(cmd);
-	exec->exec = malloc (sizeof (*cmd) * (exec_len(cmd, 0, 1) + 1));
+	exec->exec = malloc (sizeof (*cmd) * (exec_len(cmd, 0, 1, 0) + 1));
 	if (!exec->exec)
 		return (1);
 	while (cmd[i])
@@ -94,9 +94,9 @@ void	init_argv(t_exec *exec, char *cmd, int i, t_cmd *cmd1)
 	int	k;
 
 	k = 1;
-	i = exec_len(cmd, 0, 0);
+	i = exec_len(cmd, 0, 0, 0);
 	exec->argv = malloc(sizeof(*(exec->argv))
-			* (argv_count(cmd, exec_len(cmd, 0, 0), 0) + 2));
+			* (argv_count(cmd, exec_len(cmd, 0, 0, 0), 0) + 2));
 	perror_exit(cmd1, "malloc at init_argv", !exec->argv);
 	exec->argv[0] = ft_strdup(exec->exec);
 	perror_exit(cmd1, "malloc at init_argv", !exec->argv[0]);

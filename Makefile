@@ -1,35 +1,44 @@
 UNAME = $(shell uname -s)
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -g -ggdb3 -Ireadline-dghonyan/include/
+CFLAGS = -Wall -Wextra -g -ggdb3 -Ireadline-dghonyan/include/ #-fsanitize=address
 PREFIX = "${shell find ${HOME} -name readline-dghonyan 2>/dev/null}"
 LIBFT = -lft -L libft
+OBJDIR = obj
 SRCS = $(wildcard *.c)
-OBJS = $(SRCS:.c=.o)
-
+TEMP = $(SRCS:.c=.o)
+OBJS = $(addprefix $(OBJDIR)/, $(TEMP))
 READLINE = -lreadline
 
 ifneq ($(UNAME), Linux)
 	READLINE += -L readline-dghonyan/lib/
 endif
 
-all: lib $(NAME)
+$(OBJDIR)/%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+all: mkdir lib $(NAME)
+
+mkdir:
+	mkdir -p $(OBJDIR)
 
 $(NAME): $(OBJS)
-	$(CC) $(OBJS) $(READLINE) $(LIBFT) -o $(NAME)
+	$(CC) $(OBJS) $(CFLAGS) $(READLINE) $(LIBFT) -o $(NAME)
 
 lib:
 	cd libft && make 
 
 clean:
-	rm -f ./*.o libft/*.o
+	rm -rf $(OBJDIR)
+	make clean -C libft
 
 fclean: clean
-	rm -f $(NAME) libft/libft.a
+	rm -rf $(NAME)
+	make fclean -C libft
 
 re: fclean all
 
 readline:
 	cd readline-master && ./configure --prefix=$(PREFIX)/ && make clean && make && make install
 
-.PHONY: all clean fclean re lib readline
+.PHONY: all clean fclean re lib readline mkdir

@@ -15,12 +15,13 @@ int	ft_isspace_index(char *str)
 	int	i;
 
 	i = 0;
-	while (str[i] == '\r'
+	while (str[i]
+		&& (str[i] == '\r'
 		|| str[i] == '\t'
 		|| str[i] == '\v'
 		|| str[i] == '\n'
 		|| str[i] == '\f'
-		|| str[i] == ' ')
+		|| str[i] == ' '))
 		i++;
 	return (i);
 }
